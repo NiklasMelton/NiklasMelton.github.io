@@ -279,7 +279,18 @@
     const list = document.getElementById("publications-list");
 
     publications
-      .sort((a, b) => Number(b.year || 0) - Number(a.year || 0))
+      .sort((a, b) => {
+        const yearDifference = Number(b.year || 0) - Number(a.year || 0);
+
+        if (yearDifference !== 0) {
+          return yearDifference;
+        }
+
+        const aHasLink = publicationLink(a) ? 1 : 0;
+        const bHasLink = publicationLink(b) ? 1 : 0;
+
+        return aHasLink - bHasLink;
+      })
       .forEach(pub => {
         const item = document.createElement("li");
 

@@ -90,12 +90,28 @@
       color: var(--muted);
       font-size: 0.9rem;
     }
+    .publications {
+      padding-left: 1.5rem;
+    }
+
+    .publications li {
+      margin-bottom: 1rem;
+    }
+
+    .publications strong {
+      color: var(--text);
+    }
+
   </style>
 </head>
 <body>
   <main>
     <header>
       <h1>Niklas Melton</h1>
+      <div class="links">
+        <a class="button" href="Niklas_Melton_CV_april_2026.pdf">Resume</a>
+        <a class="button" href="https://github.com/NiklasMelton">GitHub Profile</a>
+      </div>
         <section>
           <h2>Bio</h2>
           <p>
@@ -122,10 +138,6 @@
           </p>
         </section>
 
-      <div class="links">
-        <a class="button" href="Niklas_Melton_CV_april_2026.pdf">Resume</a>
-        <a class="button" href="https://github.com/NiklasMelton">GitHub Profile</a>
-      </div>
     </header>
 
     <section>
@@ -169,9 +181,173 @@
       </article>
     </section>
 
+    <section>
+      <h2>Publications</h2>
+
+      <p>
+        See also my
+        <a href="https://scholar.google.com/citations?hl=en&user=1d9YWFEAAAAJ">
+          Google Scholar profile
+        </a>.
+      </p>
+
+      <ol id="publications-list" class="publications" reversed></ol>
+    </section>
+
     <footer>
       <p>© Niklas Melton</p>
     </footer>
   </main>
+
+<script>
+  function parseBibTeX(bibtex) {
+    const entries = [];
+    const entryRegex = /@(\w+)\s*{\s*([^,]+),([\s\S]*?)(?=\n@|\s*$)/g;
+    let match;
+
+    while ((match = entryRegex.exec(bibtex)) !== null) {
+      const type = match[1].trim();
+      const key = match[2].trim();
+      const body = match[3];
+
+      const fields = {};
+      const fieldRegex = /(\w+)\s*=\s*[{"]([\s\S]*?)[}"],?\s*(?=\n\s*\w+\s*=|\n\s*}\s*$|$)/g;
+      let fieldMatch;
+
+      while ((fieldMatch = fieldRegex.exec(body)) !== null) {
+        const fieldName = fieldMatch[1].toLowerCase();
+        let fieldValue = fieldMatch[2]
+          .replace(/\{\\u\{g\}\}/g, "ğ")
+          .replace(/\\&/g, "&")
+          .replace(/\\_/g, "_")
+          .replace(/[{}]/g, "")
+          .replace(/\s+/g, " ")
+          .trim();
+
+        fields[fieldName] = fieldValue;
+      }
+
+      entries.push({
+        type,
+        key,
+        ...fields
+      });
+    }
+
+    return entries;
+  }
+
+  function formatAuthors(authorString) {
+    if (!authorString) return "";
+
+    const authors = authorString.split(/\s+and\s+/);
+
+    if (authors.length > 8) {
+      return `${authors.slice(0, 8).join(", ")}, et al.`;
+    }
+
+    return authors.join(", ");
+  }
+
+  function publicationVenue(pub) {
+    if (pub.journal) return pub.journal;
+    if (pub.booktitle) return pub.booktitle;
+    if (pub.type === "misc" && pub.journal) return pub.journal;
+    return "";
+  }
+
+  function publicationLink(pub) {
+    if (pub.doi) {
+      return `https://doi.org/${pub.doi}`;
+    }
+
+    if (pub.url) {
+      return pub.url;
+    }
+
+    if (pub.journal && pub.journal.toLowerCase().includes("arxiv")) {
+      const arxivMatch = pub.journal.match(/arXiv:\s*([0-9.]+)/i);
+      if (arxivMatch) {
+        return `https://arxiv.org/abs/${arxivMatch[1]}`;
+      }
+    }
+
+    return null;
+  }
+
+  function renderPublications(publications) {
+    const list = document.getElementById("publications-list");
+
+    publications
+      .sort((a, b) => Number(b.year || 0) - Number(a.year || 0))
+      .forEach(pub => {
+        const item = document.createElement("li");
+
+        const title = document.createElement("strong");
+        const link = publicationLink(pub);
+
+        if (link) {
+          const a = document.createElement("a");
+          a.href = link;
+          a.textContent = pub.title || "Untitled";
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          title.appendChild(a);
+        } else {
+          title.textContent = pub.title || "Untitled";
+        }
+
+        item.appendChild(title);
+        item.appendChild(document.createTextNode(". "));
+
+        const authors = formatAuthors(pub.author);
+        if (authors) {
+          item.appendChild(document.createTextNode(`${authors}. `));
+        }
+
+        const venue = publicationVenue(pub);
+        if (venue) {
+          const venueElement = document.createElement("em");
+          venueElement.textContent = venue;
+          item.appendChild(venueElement);
+          item.appendChild(document.createTextNode(". "));
+        }
+
+        if (pub.volume) {
+          item.appendChild(document.createTextNode(`${pub.volume}`));
+        }
+
+        if (pub.number) {
+          item.appendChild(document.createTextNode(`(${pub.number})`));
+        }
+
+        if (pub.pages) {
+          item.appendChild(document.createTextNode(`, ${pub.pages}`));
+        }
+
+        if (pub.year) {
+          item.appendChild(document.createTextNode(`, ${pub.year}.`));
+        }
+
+        if (pub.key === "melton2025extensive") {
+          const award = document.createElement("strong");
+          award.textContent = " Best Paper Award.";
+          item.appendChild(award);
+        }
+
+        list.appendChild(item);
+      });
+  }
+
+  fetch("publications.bib")
+    .then(response => response.text())
+    .then(bibtex => {
+      const publications = parseBibTeX(bibtex);
+      renderPublications(publications);
+    })
+    .catch(error => {
+      console.error("Could not load publications.bib:", error);
+    });
+</script>
 </body>
 </html>

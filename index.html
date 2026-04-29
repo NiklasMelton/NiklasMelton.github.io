@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Niklas Melton</title>
+  <style>
+    :root {
+      --bg: #f7f7f8;
+      --text: #1f2933;
+      --muted: #5f6c7b;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --accent: #2563eb;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    main {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 3rem 1.25rem;
+    }
+
+    header {
+      margin-bottom: 2.5rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    h2 {
+      margin-top: 2.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.4rem;
+    }
+
+    p {
+      color: var(--muted);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 0.65rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--card);
+    }
+
+    .project {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+    }
+
+    .project h3 {
+      margin-top: 0;
+      margin-bottom: 0.25rem;
+    }
+
+    footer {
+      margin-top: 3rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Niklas Melton</h1>
+      <p>
+        Researcher and developer working on machine learning, computational geometry,
+        clustering, and Python software.
+      </p>
+
+      <div class="links">
+        <a class="button" href="Niklas_Melton_CV_apr_2026.pdf">Resume</a>
+        <a class="button" href="https://github.com/NiklasMelton">GitHub Profile</a>
+      </div>
+    </header>
+
+    <section>
+      <h2>Projects</h2>
+
+      <article class="project">
+        <h3>AdaptiveResonanceLib</h3>
+        <p>
+          Python package for Adaptive Resonance Theory models and related machine
+          learning tools.
+        </p>
+        <p>
+          <a href="https://github.com/NiklasMelton/AdaptiveResonanceLib">GitHub</a>
+          ·
+          <a href="https://pypi.org/project/artlib/">PyPI</a>
+        </p>
+      </article>
+
+      <article class="project">
+        <h3>OverlapIndex</h3>
+        <p>
+          Python package for computing overlap-based indices and related measurements.
+        </p>
+        <p>
+          <a href="https://github.com/NiklasMelton/OverlapIndex">GitHub</a>
+          ·
+          <a href="https://pypi.org/project/overlapindex/">PyPI</a>
+        </p>
+      </article>
+
+      <article class="project">
+        <h3>PyAlphaShape</h3>
+        <p>
+          Python package for alpha shapes and geometric boundary reconstruction.
+        </p>
+        <p>
+          <a href="https://github.com/NiklasMelton/PyAlphaShape">GitHub</a>
+          ·
+          <a href="https://pypi.org/project/pyalphashape/">PyPI</a>
+        </p>
+      </article>
+    </section>
+
+    <footer>
+      <p>© Niklas Melton</p>
+    </footer>
+  </main>
+</body>
+</html>
